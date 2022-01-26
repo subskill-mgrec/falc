@@ -28,15 +28,25 @@ class Falc
      * @var array
      */
     private $digits = [
-        1 => 'un',
-        2 => 'deux',
-        3 => 'trois',
-        4 => 'quatre',
-        5 => 'cinq',
-        6 => 'six',
-        7 => 'sept',
-        8 => 'huit',
-        9 => 'neuf'
+        1   => 'un',
+        2   => 'uns',
+        3   => 'une',
+        4   => 'unes',
+        5   => 'd\'un',
+        6   => 'd\'une',
+        7   => 'l\'un',
+        8   => 'l\'une',
+        9   => 'qu\'une',
+        9   => 'quelqu\'une',
+        11   => 'quelqu\'un',
+        12   => 'deux',
+        13  => 'trois',
+        14  => 'quatre',
+        15  => 'cinq',
+        16  => 'six',
+        17  => 'sept',
+        18  => 'huit',
+        19  => 'neuf',
     ];
 
     /**
@@ -46,9 +56,9 @@ class Falc
         0 => '',
         3 => 'mille',
         6 => 'million',
-        6 => 'millions',
+        7 => 'millions',
         9 => 'milliard',
-        9 => 'milliards',
+        10 => 'milliards',
         12 => 'billion', // was 'trillion',
         15 => 'quadrillion',
         18 => 'quintillion',
@@ -139,9 +149,9 @@ class Falc
                     foreach ($words as $key => $word) {
                         if (strpos($word, $needle)) {
                             if (is_null($class)) {
-                                $contains .= "<span>" . $word . "<span>" . " ";
+                                $contains .= "<span>" . $word . "</span>" . " ";
                             } else {
-                                $contains .= "<span class='$class'>" . $word . "<span>" . " ";
+                                $contains .= "<span class='$class'>" . $word . "</span>" . " ";
                             }
                         } else {
                             $contains .= $word . " ";
@@ -188,6 +198,8 @@ class Falc
 
                     while (($lastPos = strpos($str, $needle, $lastPos)) !== false) {
                         $offsetPos = $lastPos - $start_pos;
+                        $partString = "";
+                        // recupéré le point
                         if (substr($str, $lastPos, 3) == "..."){
                             $partString = substr($str, $start_pos, $offsetPos+3);
                             $lastPos    = $lastPos + 3;
@@ -249,9 +261,9 @@ class Falc
                     foreach ($list as $elem) {
                         $needle = $elem;
                         if (is_null($class)) {
-                            $contains = str_replace($needle, "<spans>$elem</spans>", $contains);
+                            $contains = str_replace($needle, "<span>$elem</span>", $contains);
                         }else{
-                            $contains = str_replace($needle, "<spans class='$class'>$elem</spans>", $contains);
+                            $contains = str_replace($needle, "<span class='$class'>$elem</span>", $contains);
                         }
                     }
                     break;
@@ -312,7 +324,7 @@ class Falc
                     // str_replace : remplace " " par "-". Donc <span class="xxxxx" => <span-class="xxxx"
                     $sub_string             =   str_replace(" ", "-", $this->numberInLetter(str_replace($this->dash, " ", $s), $class ,$next_string));
 
-                    // meme probleme class="xxxxx yyyy" devient class="xxxxx-yyyy"
+                    // meme probleme class="xxxxx yyyy " devient class="xxxxx-yyyy"
                     $class_serach           =   str_replace(" ", "-", $class);
                     $str_fix_class          =   str_replace("<span-class='$class_serach'>", "<span class='$class'>", $sub_string);
 
@@ -375,6 +387,40 @@ class Falc
                         }
                     }else{
                         foreach ($matches[0] as $key => $match){
+                            $string = str_replace($match, "<span class='$class'>" . $match . "</span>", $string);
+                        }
+                    }
+
+                    break;
+                default:
+                    return "type non reconnue";
+            }
+
+        }catch (\Exception $e){
+            return $e->getMessage();
+        }
+
+        return $string;
+
+    }
+
+
+    function separateWord(string $string, string $type = null, string $class = null) {
+        preg_match_all('/[a-zA-Z0-9][-][a-zA-Z0-9]/', $string, $matches);
+
+        try{
+
+            switch (strtolower($type)) {
+                case null:
+                    return $matches;
+                    break;
+                case "span":
+                    if (is_null($class)) {
+                        foreach ($matches[0] as $key => $match){
+                            $string = str_replace($match, "<span>" . $match . "</span>", $string);
+                        }
+                    }else{
+                        foreach ($matches[0] as $key => $match) {
                             $string = str_replace($match, "<span class='$class'>" . $match . "</span>", $string);
                         }
                     }
