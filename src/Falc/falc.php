@@ -138,7 +138,8 @@ class Falc
                     foreach ($words as $key => $word) {
                         if (strpos($word, "-")) {
                             echo $word;
-                            array_push($contains, $word);
+                            //array_push($contains, $word);
+                            $contains[] = $word;
                         }
                     }
                     break;
@@ -362,7 +363,7 @@ class Falc
         if( $this->is_span_opened && (!empty($next) && !$this->isANumber($next) || empty($next)) ) {
             $array_string_after[$count-1] = $array_string_after[$count-1] . '</span>';
         }
-        return join(" ", $array_string_after);
+        return implode(" ", $array_string_after);
     }
 
     /**
