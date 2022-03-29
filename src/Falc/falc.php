@@ -21,7 +21,8 @@ class Falc
     40 => 'quarante',
     50 => 'cinquante',
     60 => 'soixante',
-    100 => 'cent'
+    100 => 'cent',
+    101 => 'cents'
   ];
 
   /**
@@ -301,6 +302,39 @@ class Falc
     return $nextString;
   }
 
+  public function simpleNumberInLetter(string $string, string $class){
+
+    $string = str_replace('&nbsp;', ' ', $string);
+    $string = str_replace('<br type="_moz">', '<br>', $string);
+    $string = str_replace('<br>', ' <br> ', $string);
+    $string = str_replace('<p>', '<p> ', $string);
+    $string = str_replace('</p>', ' </p>', $string);
+    $string = str_replace('<li>', '<li> ', $string);
+    $string = str_replace('</li>', ' </li>', $string);
+    $string = str_replace('<b>', '<b> ', $string);
+    $string = str_replace('</b>', ' </b>', $string);
+    $string = str_replace('<strong>', '<strong> ', $string);
+    $string = str_replace('</strong>', ' </strong>', $string);
+    $string = str_replace('">', '"> ', $string);
+    $string = str_replace('</span>', ' </span>', $string);
+    $string = str_replace('“', '“ ', $string);
+    $string = str_replace('”', ' ”', $string);
+    $array_string           =   explode(" ", $string);
+    $array_string_after     =   [];
+    foreach($array_string as $key => $s){
+      if($this->isANumber($s)){
+        if (!is_null($class) && !empty($class)){
+          $array_string_after[] = "<span class='$class'>" . $s . '</span>';
+        }else{
+          $array_string_after[] = "<span>" . $s . '</span>';
+        }
+      }else{
+        $array_string_after[] = $s;
+      }
+    }
+    return implode(" ", $array_string_after);
+  }
+
   /**
    * @param $string
    * @param string $next
@@ -308,7 +342,20 @@ class Falc
    */
   public function numberInLetter(string $string, string $class = null, $next = "") {
     $string = str_replace('&nbsp;', ' ', $string);
+    $string = str_replace('<br type="_moz">', '<br>', $string);
     $string = str_replace('<br>', ' <br> ', $string);
+    $string = str_replace('<p>', '<p> ', $string);
+    $string = str_replace('</p>', ' </p>', $string);
+    $string = str_replace('<li>', '<li> ', $string);
+    $string = str_replace('</li>', ' </li>', $string);
+    $string = str_replace('<b>', '<b> ', $string);
+    $string = str_replace('</b>', ' </b>', $string);
+    $string = str_replace('<strong>', '<strong> ', $string);
+    $string = str_replace('</strong>', ' </strong>', $string);
+    $string = str_replace('">', '"> ', $string);
+    $string = str_replace('</span>', ' </span>', $string);
+    $string = str_replace('“', '“ ', $string);
+    $string = str_replace('”', ' ”', $string);
     $array_string           =   explode(" ", $string);
     $array_string_after     =   [];
     $this->is_span_opened   =   false;
