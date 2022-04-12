@@ -29,10 +29,10 @@ class Falc
    * @var array
    */
   private $digits = [
-    1   => 'un',
-    2   => 'uns',
-    3   => 'une',
-    4   => 'unes',
+    //1   => 'un',
+    //2   => 'uns',
+    //3   => 'une',
+    //4   => 'unes',
     12   => 'deux',
     13  => 'trois',
     14  => 'quatre',
